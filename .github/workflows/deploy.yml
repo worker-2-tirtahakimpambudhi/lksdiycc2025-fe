@@ -45,4 +45,4 @@ jobs:
 
           kubectl set image deployment/lksdiycc2025-fe-deployment lksdiycc2025-fe-container=$ECR_REGISTRY/lksdiycc2025-fe:$IMAGE_TAG
           kubectl rollout status deployment/lksdiycc2025-fe-deployment
-          kubectl get pods -l app=lksdiycc2025-fe-pod -o wide --watch
+          kubectl get pods -l app=lksdiycc2025-fe-pod -o wide 

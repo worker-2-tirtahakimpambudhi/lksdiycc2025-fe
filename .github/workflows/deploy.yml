@@ -45,8 +45,8 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: lksdiycc2025-fe
-          IMAGE_TAG: ${{ github.sha }}
-          IMAGE_NAME: ${{ steps.login-ecr.outputs.registry }}/lksdiycc2025-fe:${{ github.sha }}
+          IMAGE_TAG: latest
+          IMAGE_NAME: ${{ steps.login-ecr.outputs.registry }}/lksdiycc2025-fe:latest
         run: |
           kubectl set image deployment/lksdiycc2025-fe-deployment lksdiycc2025-fe-container=$IMAGE_NAME 
           kubectl rollout restart deployment/lksdiycc2025-fe-deployment

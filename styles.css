@@ -80,12 +80,12 @@ th, td {
 
 th {
     background: #6a11cb;
-    color: white;
+    color: black;
 }
 
 /* Student Photo */
 td img {
-    border-radius: 5px;
+    border-radius: 20px;
 }
 
 /* Delete Button */

@@ -14,6 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
+      - name: Installing YQ
+        run: |
+          sudo apt-get update && sudo apt-get install -y yq
+          yq --version
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -42,5 +46,5 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
           IMAGE_TAG: ${{ steps.commit.outputs.short }}
         run: |
-            sed s%277789128961.dkr.ecr.ap-southeast-2.amazonaws.com/lksdiycc2025-fe%$(IMAGE_TAG)% deployment.yml 
+            yq -i '.spec.template.spec.containers[0].image = env(ECR_REGISTRY) + "/lksdiycc2025-fe:" + env(IMAGE_TAG)' deployment.yml
             kubectl apply -f deployment.yml

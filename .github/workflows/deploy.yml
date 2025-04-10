@@ -43,10 +43,10 @@ jobs:
 
       - name: Deploy to EKS
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
-          IMAGE_TAG: ${{ steps.commit.outputs.short }}
-          IMAGE_NAME: ${{ steps.login-ecr.outputs.registry }}/lksdiycc2025-fe:${{ steps.commit.outputs.short }}
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: lksdiycc2025-fe
+          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_NAME: ${{ steps.login-ecr.outputs.registry }}/lksdiycc2025-fe/${{ github.sha }}
         run: |
-            echo "Name Image : ${IMAGE_NAME}"
-            IMAGE_NAME="${IMAGE_NAME}" yq -i -y  '.spec.template.spec.containers.[0].image = env(IMAGE_NAME)' deployment.yml
-            kubectl apply -f deployment.yml
+          kubectl set image deployment/lksdiycc2025-fe-deployment lksdiycc2025-fe-container=$IMAGE_NAME 
+          kubectl rollout restart deployment/lksdiycc2025-fe-deployment

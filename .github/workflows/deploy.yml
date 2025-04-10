@@ -46,5 +46,5 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
           IMAGE_TAG: ${{ steps.commit.outputs.short }}
         run: |
-            yq -i -y '.spec.template.spec.containers[0].image = env(ECR_REGISTRY) + "/lksdiycc2025-fe:" + env(IMAGE_TAG)' deployment.yml
+            yq -i -y '.spec.template.spec.containers[0].image = $ECR_REGISTRY + "/lksdiycc2025-fe:" + $IMAGE_TAG' deployment.yml
             kubectl apply -f deployment.yml

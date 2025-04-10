@@ -48,6 +48,8 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           IMAGE_NAME: ${{ steps.login-ecr.outputs.registry }}/lksdiycc2025-fe/${{ github.sha }}
         run: |
+          echo "$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> image.txt
+          cat image.txt
           kubectl set image deployment/lksdiycc2025-fe-deployment lksdiycc2025-fe-container=$IMAGE_NAME 
           kubectl rollout restart deployment/lksdiycc2025-fe-deployment
           kubectl get po -l app=lksdiycc2025-fe-pod -o wide

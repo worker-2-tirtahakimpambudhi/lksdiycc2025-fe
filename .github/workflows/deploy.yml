@@ -43,4 +43,6 @@ jobs:
           IMAGE_TAG: ${{ steps.commit.outputs.short }}
         run: |
 
-          bash write.sh $ECR_REGISTRY lksdiycc2025-fe $IMAGE_TAG
+          kubectl set image deployment/lksdiycc2025-fe-deployment lksdiycc2025-fe-container=$ECR_REGISTRY/lksdiycc2025-fe:$IMAGE_TAG
+          kubectl rollout status deployment/lksdiycc2025-fe-deployment
+          kubectl get pods -l app=lksdiycc2025-fe-pod -o wide --watch

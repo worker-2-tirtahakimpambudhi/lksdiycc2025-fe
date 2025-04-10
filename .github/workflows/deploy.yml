@@ -42,25 +42,26 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}        
           IMAGE_TAG: ${{ steps.commit.outputs.short }}
         run: |
-          sudo cat > newdeployment.yml <<EOF
+          
+          echo "
           apiVersion: apps/v1
           kind: Deployment
           metadata:
-            name: lksdiycc2025-fe-deployment
+          name: lksdiycc2025-fe-deployment
           spec:
-            selector:
+          selector:
               matchLabels:
-                app: lksdiycc2025-fe-pod
-            template:
+              app: lksdiycc2025-fe-pod
+          template:
               metadata:
-                labels:
+              labels:
                   app: lksdiycc2025-fe-pod
               spec:
-                containers:
-                - name: lksdiycc2025-fe-container
+              containers:
+              -   name: lksdiycc2025-fe-container
                   image: ${ECR_REGISTRY}/lksdiycc2025-fe:${IMAGE_TAG}
                   resources:
-                    limits:
+                  limits:
                       memory: "128Mi"
                       cpu: "100m"
                   ports:
@@ -70,23 +71,23 @@ jobs:
           apiVersion: v1
           kind: Service
           metadata:
-            name: lksdiycc2025-fe-service
+          name: lksdiycc2025-fe-service
           spec:
-            selector:
+          selector:
               app: lksdiycc2025-fe-pod
-            ports:
-            - port: 80
-              targetPort: 80
+          ports:
+          - port: 80
+            targetPort: 80
 
           --- 
 
           apiVersion: networking.k8s.io/v1
           kind: Ingress
           metadata:
-            name: lksdiycc2025-fe-ingress
-            labels:
+          name: lksdiycc2025-fe-ingress
+          labels:
               name: lksdiycc2025-fe-ingress
-            annotations:
+          annotations:
               alb.ingress.kubernetes.io/load-balancer-name: lksdiy-fe
               alb.ingress.kubernetes.io/ip-address-type: ipv4
               alb.ingress.kubernetes.io/scheme: internet-facing
@@ -102,38 +103,38 @@ jobs:
               alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
 
           spec:
-            ingressClassName: ingress-alb-class
-            rules:
-            - http:
-                paths:
-                - pathType: Prefix
-                  path: "/"
-                  backend:
-                    service:
-                      name: lksdiycc2025-fe-service
-                      port: 
-                        number: 80
+          ingressClassName: ingress-alb-class
+          rules:
+          - http:
+              paths:
+              - pathType: Prefix
+                path: "/"
+                backend:
+                  service:
+                    name: lksdiycc2025-fe-service
+                    port: 
+                      number: 80
 
           --- 
 
           apiVersion: autoscaling/v2
           kind: HorizontalPodAutoscaler
           metadata:
-            name: lksdiycc2025-fe-autoscalling
+          name: lksdiycc2025-fe-autoscalling
           spec:
-            scaleTargetRef:
+          scaleTargetRef:
               apiVersion: apps/v1
               kind: Deployment
               name: lksdiycc2025-fe-deployment
-            minReplicas: 2
-            maxReplicas: 4
-            metrics:
-            - type: Resource
-              resource:
-                name: cpu
-                target:
+          minReplicas: 2
+          maxReplicas: 4
+          metrics:
+          - type: Resource
+            resource:
+              name: cpu
+              target:
                   type: Utilization
                   averageUtilization: 70
-          EOF
+          " >> newdeployment.yml
           kubectl apply -f newdeployment.yml
           rm newdeployment.yml

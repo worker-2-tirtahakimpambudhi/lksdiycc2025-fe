@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: lksdiycc2025-fe-container
-        image: DOCKER_IMAGE
+        image: 277789128961.dkr.ecr.ap-southeast-2.amazonaws.com/lksdiycc2025-fe
         resources:
           limits:
             memory: "128Mi"
